@@ -7,12 +7,15 @@ from core4 import growth_handler as Growth_Handler
 from core4 import elements as Elements
 from util import utilities as Utils
 from util import display as Display_Utils
-
+# import multiprocessing as mp
 
 np.random.seed(8)
 
 
 class GSOM:
+    # cores=mp.cpu_count()
+    # print("Number of cores: ",cores)
+   
 
     def __init__(self, params, input_vectors, dimensions, plot_for_itr=0, activity_classes=None, output_loc=None):
         self.parameters = params
@@ -32,6 +35,8 @@ class GSOM:
         self.alphas = Utils.Utilities.get_decremental_alphas(self.parameters.NUMBER_OF_TEMPORAL_CONTEXTS)
         self.previousBMU = np.zeros((1, self.parameters.NUMBER_OF_TEMPORAL_CONTEXTS, self.dimensions))
         self.previousBMU_evaluation = np.zeros((1, self.parameters.NUMBER_OF_TEMPORAL_CONTEXTS, self.dimensions))
+        # self.pool = mp.Pool(cores)
+
 
     def grow(self):
 
@@ -53,8 +58,20 @@ class GSOM:
                                                                   param.MAX_NEIGHBOURHOOD_RADIUS)
 
             # start_time = time.time()
-            for k in range(0, len(self.inputs)):  # No need of random sampling
-                grow_in(self.inputs[k], learning_rate, neighbourhood_radius)
+
+
+
+            # for k in range(0, len(self.inputs)):  # No need of random sampling
+            #     grow_in(self.inputs[k], learning_rate, neighbourhood_radius)
+
+
+            # results = [GSOM.pool.apply(grow_in, args=(row, learning_rate, neighbourhood_radius)) for row in self.inputs]
+
+
+
+
+
+
             # print('Itr-{}:'.format(i), round((time.time()-start_time), 3))
 
             # Remove all the nodes above the age threshold
@@ -66,6 +83,7 @@ class GSOM:
             #                                                     self.output_save_location + '/gsom_learning_' + "{0:0=4d}".format(i))
         # print('\nTrain time:', round((time.time() - start_time), 3))
         # END of learning iterations
+        # GSOM.pool.close()
         return self.gsom_nodemap
 
     def smooth(self):
@@ -290,3 +308,11 @@ class GSOM:
     def _get_neighbourhood_radius(self, total_iteration, iteration, max_neighbourhood_radius):
         time_constant = total_iteration / math.log(max_neighbourhood_radius)
         return max_neighbourhood_radius * math.exp(- iteration / time_constant)
+
+    # def __getstate__(self):
+    #     self_dict = self.__dict__.copy()
+    #     del self_dict['pool']
+    #     return self_dict
+    #
+    # def __setstate__(self, state):
+    #     self.__dict__.update(state)

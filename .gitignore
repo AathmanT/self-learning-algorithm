@@ -1,0 +1,8 @@
+
+*.pyc
+
+.idea/
+gsom/applications/zoo_experiment/output/*
+gsom/applications/zoo_experiment/data/creditcard.csv
+
+gsom/applications/zoo_experiment/data/creditcard.txt

@@ -68,7 +68,7 @@ class Display:
             else:
                 plt.plot(x, y, 'o', color=listed_color_map.colors[value.get_hit_count()], markersize=2)
 
-        plt.savefig(output_filename + '.jpeg', dpi=1200)
+        plt.savefig(output_filename + '.png', dpi=1200)
 
     def setup_heatmap_for_gsom_nodemap_adl_activity(self, labels, title, output_filename):
 

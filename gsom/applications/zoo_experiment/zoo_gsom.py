@@ -4,6 +4,7 @@ import os
 from os.path import join
 from datetime import datetime
 sys.path.append('../../')
+# import cProfile
 
 import data_parser as Parser
 from util import utilities as Utils
@@ -14,7 +15,9 @@ from core4 import core_controller as Core
 
 
 # GSOM config
-SF = 0.83
+# SF = 0.83
+SF = 0.50
+
 forget_threshold = 80  # To include forgetting, threshold should be < learning iterations.
 temporal_contexts = 1  # If stationary data - keep this at 1
 learning_itr = 100
@@ -23,8 +26,8 @@ plot_for_itr = 4  # Unused parameter - just for visualization. Keep this as it i
 
 # File Config
 dataset = 'zoo'
-data_filename = "data/zoo.txt".replace('\\', '/')
-experiment_id = 'Exp-' + datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+data_filename = "data/creditcard-short.txt".replace('\\', '/')
+experiment_id = 'Exp-new-gsom-' + datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
 output_save_location = join('output/', experiment_id)
 
 
@@ -65,6 +68,7 @@ if __name__ == '__main__':
         controller = Core.Controller(generalise_params)
         controller_start = time.time()
         result_dict = controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)
+        # result_dict = cProfile.run('controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)')
         print('Algorithms completed in', round(time.time() - controller_start, 2), '(s)')
         saved_name = Utils.Utilities.save_object(result_dict, join(output_loc, 'gsom_nodemap_SF-{}'.format(SF)))
 
