@@ -61,8 +61,8 @@ class GSOM:
 
 
 
-            # for k in range(0, len(self.inputs)):  # No need of random sampling
-            #     grow_in(self.inputs[k], learning_rate, neighbourhood_radius)
+            for k in range(0, len(self.inputs)):  # No need of random sampling
+                grow_in(self.inputs[k], learning_rate, neighbourhood_radius)
 
 
             # results = [GSOM.pool.apply(grow_in, args=(row, learning_rate, neighbourhood_radius)) for row in self.inputs]
