@@ -51,7 +51,7 @@ def generate_output_config(dataset, SF, forget_threshold):
 
 
 if __name__ == '__main__':
-# if __name__ == 'zoo_gsom':
+
         # Init GSOM Parameters
         gsom_params = Params.GSOMParameters(SF, learning_itr, smoothing_irt, distance=Params.DistanceFunction.EUCLIDEAN,
                                             temporal_context_count=temporal_contexts, forget_itr_count=forget_threshold)
