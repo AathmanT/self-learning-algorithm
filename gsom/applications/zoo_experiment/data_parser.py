@@ -5,8 +5,22 @@ import pandas as pd
 
 class InputParser:
 
-    @staticmethod
-    def parse_input_zoo_data(filename, header='infer'):
+     @staticmethod
+     def parse_input_zoo_data(filename, header='infer'):
+    #
+    #     (X_train, y_train), (X_test, y_test) = mnist.load_data()
+    #
+    #     d1, d2, d3 = X_train.shape
+    #     X_train_reshaped = X_train.reshape(d1, d2 * d3)
+    #     print(X_train_reshaped[:2000, :].shape)
+    #     y_train_half = y_train[:2000]
+    #     classes = y_train_half.tolist()
+    #     labels = y_train_half.tolist()
+    #     # print(labels)
+    #
+    #     input_database = {
+    #         0: X_train_reshaped[:2000, :]
+    #     }
 
         # (X_train, y_train), (X_test, y_test) = mnist.load_data()
         #
