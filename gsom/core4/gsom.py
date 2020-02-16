@@ -78,9 +78,9 @@ class GSOM:
             Utils.Utilities.remove_older_nodes(self.gsom_nodemap, self.parameters.AGE_THRESHOLD)
 
             # Plot
-            # if i % self.plot_for_itr == 0:
-            #     self.display.plot_gsom_learning(self.evaluate_hits(), self.activity_classes, i, ('Learning Iteration ' + str(i)),
-            #                                                     self.output_save_location + '/gsom_learning_' + "{0:0=4d}".format(i))
+            if i % self.plot_for_itr == 0:
+                self.display.plot_gsom_learning(self.evaluate_hits(), self.activity_classes, i, ('Learning Iteration ' + str(i)),
+                                                                self.output_save_location + '/gsom_learning_' + "{0:0=4d}".format(i))
         # print('\nTrain time:', round((time.time() - start_time), 3))
         # END of learning iterations
         # GSOM.pool.close()
@@ -106,9 +106,9 @@ class GSOM:
                 smooth(self.inputs[k], learning_rate, neighbourhood_radius)
 
             # Plot
-            # if i % self.plot_for_itr == 0:
-            #     self.display.plot_gsom_learning(self.evaluate_hits(), self.activity_classes, i, ('Smoothing Iteration ' + str(i)),
-            #                                                     self.output_save_location + '/gsom_smoothing_' + "{0:0=4d}".format(i))
+            if i % self.plot_for_itr == 0:
+                self.display.plot_gsom_learning(self.evaluate_hits(), self.activity_classes, i, ('Smoothing Iteration ' + str(i)),
+                                                                self.output_save_location + '/gsom_smoothing_' + "{0:0=4d}".format(i))
 
         # End of smoothing iterations
         return self.gsom_nodemap

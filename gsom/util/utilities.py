@@ -70,6 +70,9 @@ class Utilities:
             values = np.asarray([nodemap[k].recurrent_weights.reshape((dims)) for k in keys])
             global_context_dim = np.tile(global_context, (values.shape[0], 1))
             distances = np.sqrt(np.sum((values - global_context_dim)**2, axis=1))
+            x=np.argmin(distances)
+            y=keys[np.argmin(distances)]
+            z=nodemap[keys[np.argmin(distances)]]
             return nodemap[keys[np.argmin(distances)]]
         else:
             _, winner = min(nodemap.items(), key=lambda node: Utilities.get_distance_recurrent(global_context, node[1].recurrent_weights, alphas))

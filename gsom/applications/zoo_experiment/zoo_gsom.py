@@ -15,8 +15,8 @@ from core4 import core_controller as Core
 
 
 # GSOM config
-# SF = 0.83
-SF = 0.50
+SF = 0.83
+# SF = 0.50
 
 forget_threshold = 80  # To include forgetting, threshold should be < learning iterations.
 temporal_contexts = 1  # If stationary data - keep this at 1
@@ -26,7 +26,8 @@ plot_for_itr = 4  # Unused parameter - just for visualization. Keep this as it i
 
 # File Config
 dataset = 'zoo'
-data_filename = "data/creditcard-short.txt".replace('\\', '/')
+# data_filename = "data/creditcard-very-short.txt".replace('\\', '/')
+data_filename = "data/zoo-mini.txt".replace('\\', '/')
 experiment_id = 'Exp-new-gsom-' + datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
 output_save_location = join('output/', experiment_id)
 
@@ -68,12 +69,24 @@ if __name__ == '__main__':
         controller = Core.Controller(generalise_params)
         controller_start = time.time()
         result_dict = controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)
+        # print(result_dict)
         # result_dict = cProfile.run('controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)')
         print('Algorithms completed in', round(time.time() - controller_start, 2), '(s)')
         saved_name = Utils.Utilities.save_object(result_dict, join(output_loc, 'gsom_nodemap_SF-{}'.format(SF)))
 
         gsom_nodemap = result_dict[0]['gsom']
 
+        from collections import Counter
+
+        def vote(neighbors):
+            class_counter = Counter()
+            for neighbor in neighbors:
+                class_counter[neighbor[2]] += 1
+            return class_counter.most_common(1)[0][0]
+
+
+        for key,value in gsom_nodemap.items():
+            print(key," => ",[str(classes[lbl_id]) for lbl_id in value.get_mapped_labels()])
         # Display
         display = Display_Utils.Display(result_dict[0]['gsom'], None)
         display.setup_labels_for_gsom_nodemap(classes, 2, 'Latent Space of {} : SF={}'.format(dataset, SF),
