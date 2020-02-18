@@ -2,11 +2,22 @@ import pandas as pd
 import re
 # from keras.datasets import mnist
 import smote as smote
+import gsom.applications.zoo_experiment.gsmote.GSMOTE as GSMOTE
 
 class InputParser:
 
     @staticmethod
     def parse_input_zoo_data(filename, header='infer'):
+        #GSMOTE
+        X_f,y_f = GSMOTE.OverSample()
+        classes = y_f.tolist()
+        labels = y_f.tolist()
+        input_database = {
+            0: X_f[:, :]
+        }
+
+
+        #Smote
         # X_f,y_f = smote.Data_Extract(filename)
         # classes = y_f.tolist()
         # labels = y_f.tolist()
@@ -76,12 +87,12 @@ class InputParser:
         #     0: input_data.as_matrix([0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,28,29])
         # }
 
-        input_data = pd.read_csv(filename, header=header)
-
-        classes = input_data[17].tolist()
-        labels = input_data[0].tolist()
-        input_database = {
-            0: input_data.as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
-        }
+        # input_data = pd.read_csv(filename, header=header)
+        #
+        # classes = input_data[17].tolist()
+        # labels = input_data[0].tolist()
+        # input_database = {
+        #     0: input_data.as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+        # }
 
         return input_database, labels, classes
