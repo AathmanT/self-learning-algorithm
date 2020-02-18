@@ -56,7 +56,7 @@ class Display:
             if labels[label_id] == 0:
                 count_of_zero += 1
 
-        return "0(" + str(count_of_zero) + ")," + "1(" + str(count_of_zero) + ")"
+        return "0(" + str(count_of_zero) + ")," + "1(" + str(count_of_one) + ")"
 
     def setup_labels_for_gsom_nodemap(self, labels, figure_id, title, output_filename):
 
