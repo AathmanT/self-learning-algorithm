@@ -286,7 +286,7 @@ class GSOM:
         if node_dist_sqr < neigh_radius_sqr:
 
             # update the weight vector of the neighbour
-            influence = math.exp(- node_dist_sqr / (2 * neigh_radius_sqr))
+            influence = np.exp(- node_dist_sqr / (2 * neigh_radius_sqr))
             node.adjust_weights(self.globalContexts, influence, learning_rate)
 
             # habituate the neuron
@@ -306,8 +306,8 @@ class GSOM:
         return parameters.ALPHA * (1 - (parameters.R / nodemap_size)) * prev_learning_rate
 
     def _get_neighbourhood_radius(self, total_iteration, iteration, max_neighbourhood_radius):
-        time_constant = total_iteration / math.log(max_neighbourhood_radius)
-        return max_neighbourhood_radius * math.exp(- iteration / time_constant)
+        time_constant = total_iteration / np.log(max_neighbourhood_radius)
+        return max_neighbourhood_radius * np.exp(- iteration / time_constant)
 
     # def __getstate__(self):
     #     self_dict = self.__dict__.copy()

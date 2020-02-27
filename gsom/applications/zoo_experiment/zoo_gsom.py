@@ -5,6 +5,7 @@ from os.path import join
 from datetime import datetime
 sys.path.append('../../')
 # import cProfile
+import numpy as np
 
 import data_parser as Parser
 from util import utilities as Utils
@@ -15,18 +16,18 @@ from core4 import core_controller as Core
 
 
 # GSOM config
-# SF = 0.83
 SF = 0.50
+# SF = 0.50
 
 forget_threshold = 80  # To include forgetting, threshold should be < learning iterations.
 temporal_contexts = 1  # If stationary data - keep this at 1
-learning_itr = 100
-smoothing_irt = 50
+learning_itr = 50
+smoothing_irt = 25
 plot_for_itr = 4  # Unused parameter - just for visualization. Keep this as it is.
 
 # File Config
 dataset = 'zoo'
-data_filename = "data/creditcard-short.txt".replace('\\', '/')
+data_filename = "data/zoo.txt".replace('\\', '/')
 experiment_id = 'Exp-new-gsom-' + datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
 output_save_location = join('output/', experiment_id)
 

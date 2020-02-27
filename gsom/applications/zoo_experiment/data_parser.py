@@ -1,20 +1,16 @@
 import pandas as pd
-import re
-# from keras.datasets import mnist
-import smote as smote
-import gsom.applications.zoo_experiment.gsmote.GSMOTE as GSMOTE
 
 class InputParser:
 
     @staticmethod
     def parse_input_zoo_data(filename, header='infer'):
         #GSMOTE
-        X_f,y_f = GSMOTE.OverSample()
-        classes = y_f.tolist()
-        labels = y_f.tolist()
-        input_database = {
-            0: X_f[:, :]
-        }
+        # X_f,y_f = GSMOTE.OverSample()
+        # classes = y_f.tolist()
+        # labels = y_f.tolist()
+        # input_database = {
+        #     0: X_f[:, :]
+        # }
 
 
         #Smote

@@ -64,16 +64,10 @@ class Display:
             if value.get_hit_count() > 0:
                 plt.plot(x, y, 'o', color=listed_color_map.colors[value.get_hit_count()], markersize=2)
                 #label_str = ','.join([str(labels[lbl_id]) for lbl_id in value.get_mapped_labels()])
-                arr = [str(labels[lbl_id]) for lbl_id in value.get_mapped_labels()]
-                print(arr)
-                cnt = Counter(arr)
-                label_str = ''
-                count_1, count_0 = cnt['1'], cnt['0']
-                if count_1 != 0:
-                    label_str = '1(' + str(cnt['1']) + ')'
-                if count_0 != 0:
-                    label_str = '0(' + str(cnt['0']) + ')'
-                print(label_str)
+                arr = np.asarray([str(labels[lbl_id]) for lbl_id in value.get_mapped_labels()])
+                unique, counts = np.unique(arr, return_counts=True)
+                count_list = dict(zip(unique, counts))
+                label_str=', '.join("{!s}({!r})".format(key,val) for (key,val) in count_list.items())
                 plt.text(x, y + 0.3, label_str, fontsize=2)
             else:
                 plt.plot(x, y, 'o', color=listed_color_map.colors[value.get_hit_count()], markersize=2)
