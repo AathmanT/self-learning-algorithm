@@ -1,6 +1,6 @@
 import pandas as pd
 import gsom.applications.zoo_experiment.gsmote.GSMOTE as GSMOTE
-import smote as smote
+# import smote as smote
 
 # from keras.datasets import mnist
 
@@ -25,10 +25,12 @@ class InputParser:
     #     }
         #GSMOTE
         X_f,y_f = GSMOTE.OverSample()
-        classes = y_f.tolist()
-        labels = y_f.tolist()
+        X_test=X_f[2000:,:]
+        y_test = y_f[2000:]
+        classes = y_f[:2000].tolist()
+        labels = y_f[:2000].tolist()
         input_database = {
-            0: X_f[:, :]
+            0: X_f[:2000, :]
         }
 
         # (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -78,13 +80,13 @@ class InputParser:
         #     }
 
 
-        input_data = pd.read_csv(filename, header=header)
+        # input_data = pd.read_csv(filename, header=header)
+        #
+        # classes = input_data[17].tolist()
+        # labels = input_data[0].tolist()
+        # input_database = {
+        #     0: input_data.as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+        # }
 
-        classes = input_data[17].tolist()
-        labels = input_data[0].tolist()
-        input_database = {
-            0: input_data.as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
-        }
 
-
-        return input_database, labels, classes
+        return input_database, labels, classes,X_test,y_test
