@@ -183,6 +183,7 @@ class GSOM:
         # all_coordinates = all_coordinates.astype(int)
 
         neutral_indexes = []
+        removable_indexes = []
 
         for key, value in self.gsom_nodemap.items():
 
@@ -200,20 +201,25 @@ class GSOM:
                 for label in labels:
                     if label == '1':
                         count_1 += 1
-                    if label == '2':
+                    if label == '0':
                         count_0 += 1
                 if count_1 > count_0:
                     self.gsom_nodemap[key].change_label('1')
                     # self.node_labels.loc[index, "Name"] = '1'
                 elif count_0 > count_1:
                     # self.node_labels.loc[index, "Name"] = '0'
-                    self.gsom_nodemap[key].change_label('2')
+                    self.gsom_nodemap[key].change_label('0')
 
                 else:
                     # self.node_labels.loc[index, "Name"] = 'N'
-                    self.gsom_nodemap[key].change_label('N')
+                    self.gsom_nodemap[key].change_label('0')
 
                     neutral_indexes.append(key)
+            else:
+                removable_indexes.append(key)
+        print(neutral_indexes)
+        for key in removable_indexes:
+            del self.gsom_nodemap[key]
 
         print(neutral_indexes)
         # for index in neutral_indexes:
@@ -237,14 +243,14 @@ class GSOM:
        This function to be called for a separate dataset, to evaluate the hit nodes.
        """
 
-    def predict(self,X_train):
+    def predict(self,X_test):
 
         y_pred = []
         param = self.parameters
         gsom_nodemap = copy.deepcopy(self.gsom_nodemap)
 
 
-        for cur_input in self.inputs:
+        for cur_input in X_test:
 
             self.globalContexts_evaluation[0] = cur_input
 

@@ -6,6 +6,7 @@ from datetime import datetime
 sys.path.append('../../')
 # import cProfile
 import numpy as np
+import pandas as pd
 
 import data_parser as Parser
 from util import utilities as Utils
@@ -71,6 +72,9 @@ if __name__ == '__main__':
         controller_start = time.time()
         result_dict,y_pred = controller.run(input_vector_database,X_test, plot_for_itr, classes, output_loc_images)
 
+
+
+
         from sklearn.metrics import confusion_matrix
         import math
 
@@ -86,16 +90,21 @@ if __name__ == '__main__':
             AUC = (tp / (tp + fn) + tn / (tn + fp)) / 2
 
             print(classifier, " finished executing")
-            # print("\nClassifier: "+ classifier)
-            # print("f_score: " + str(f_score))
-            # print("g_mean: " + str(g_mean))
-            # print("AUC value: "+ str(AUC) +"\n")
+            print("\nClassifier: "+ classifier)
+            print("f_score: " + str(f_score))
+            print("g_mean: " + str(g_mean))
+            print("AUC value: "+ str(AUC) +"\n")
 
             return [classifier, f_score, g_mean, AUC]
 
-        evaluate(y_test,y_pred)
+        # y_merge=np.column_stack([y_test,np.asarray(y_pred)])
+        # labels = ["Classifier", "f_score", "g_mean", "auc_value"]
+        # values = [performance1,performance2,performance3,performance4,performance5,performance6,performance7,performance8]
+        # values = [y_merge]
+        # scores = pd.DataFrame(values, columns=labels)
+        # print(scores)
 
-
+        evaluate("GSOM_Classifier",y_test, np.array(y_pred).astype(int))
         # print(result_dict)
         # result_dict = cProfile.run('controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)')
         print('Algorithms completed in', round(time.time() - controller_start, 2), '(s)')
@@ -112,8 +121,8 @@ if __name__ == '__main__':
             return class_counter.most_common(1)[0][0]
 
 
-        for key,value in gsom_nodemap.items():
-            print(key," => ",[str(classes[lbl_id]) for lbl_id in value.get_mapped_labels()])
+        # for key,value in gsom_nodemap.items():
+        #     print(key," => ",[str(classes[lbl_id]) for lbl_id in value.get_mapped_labels()])
         # Display
         # display = Display_Utils.Display(result_dict[0]['gsom'], None)
         # display.setup_labels_for_gsom_nodemap(classes, 2, 'Latent Space of {} : SF={}'.format(dataset, SF),

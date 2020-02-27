@@ -1,6 +1,7 @@
 import pandas as pd
 import gsom.applications.zoo_experiment.gsmote.GSMOTE as GSMOTE
 # import smote as smote
+from sklearn.model_selection import train_test_split
 
 # from keras.datasets import mnist
 
@@ -25,12 +26,15 @@ class InputParser:
     #     }
         #GSMOTE
         X_f,y_f = GSMOTE.OverSample()
-        X_test=X_f[2000:,:]
-        y_test = y_f[2000:]
-        classes = y_f[:2000].tolist()
-        labels = y_f[:2000].tolist()
+
+
+        X_t, X_test, y_t, y_test = train_test_split(X_f, y_f, test_size=0.2, random_state=0)
+
+
+        classes = y_t.tolist()
+        labels = y_t.tolist()
         input_database = {
-            0: X_f[:2000, :]
+            0: X_t
         }
 
         # (X_train, y_train), (X_test, y_test) = mnist.load_data()
