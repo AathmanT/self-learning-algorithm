@@ -4,7 +4,7 @@ import math
 import numpy as np
 from scipy import spatial
 from params import params as Params
-
+import scipy
 
 class Utilities:
 
@@ -65,15 +65,17 @@ class Utilities:
     def select_winner_recurrent(nodemap, global_context, alphas):
 
         if global_context.shape[0] < 2:
-            keys = list(nodemap.keys())
+            # keys = list(nodemap.keys())
+            keys = np.asarray(list(nodemap.keys()))
             dims = nodemap[keys[0]].dimensions
             values = np.asarray([nodemap[k].recurrent_weights.reshape((dims)) for k in keys])
-            global_context_dim = np.tile(global_context, (values.shape[0], 1))
-            distances = np.sqrt(np.sum((values - global_context_dim)**2, axis=1))
-            x=np.argmin(distances)
-            y=keys[np.argmin(distances)]
-            z=nodemap[keys[np.argmin(distances)]]
-            return nodemap[keys[np.argmin(distances)]]
+            # global_context_dim = np.tile(global_context, (values.shape[0], 1))
+            out = scipy.spatial.distance.cdist(values,
+                                               global_context[0, :].reshape(1, dims), 'euclidean')
+
+            # distances = np.sqrt(np.sum((values - global_context_dim)**2, axis=1))
+
+            return nodemap[keys[out.argmin()]]
         else:
             _, winner = min(nodemap.items(), key=lambda node: Utilities.get_distance_recurrent(global_context, node[1].recurrent_weights, alphas))
             return winner

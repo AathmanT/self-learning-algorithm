@@ -74,9 +74,11 @@ class Display:
 
             if value.get_hit_count() > 0:
                 plt.plot(x, y, 'o', color=listed_color_map.colors[value.get_hit_count()], markersize=2)
-                # label_str = ','.join([str(labels[lbl_id]) for lbl_id in value.get_mapped_labels()])
-                # plt.text(x, y + 0.3, label_str, fontsize=4)
-                label_str = self.re_arrange_label(labels, value.get_mapped_labels())
+                #label_str = ','.join([str(labels[lbl_id]) for lbl_id in value.get_mapped_labels()])
+                arr = np.asarray([str(labels[lbl_id]) for lbl_id in value.get_mapped_labels()])
+                unique, counts = np.unique(arr, return_counts=True)
+                count_list = dict(zip(unique, counts))
+                label_str=', '.join("{!s}({!r})".format(key,val) for (key,val) in count_list.items())
                 plt.text(x, y + 0.3, label_str, fontsize=2)
             else:
                 plt.plot(x, y, 'o', color=listed_color_map.colors[value.get_hit_count()], markersize=2)
