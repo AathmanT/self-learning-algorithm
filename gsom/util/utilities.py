@@ -68,6 +68,12 @@ class Utilities:
             # keys = list(nodemap.keys())
             keys = np.asarray(list(nodemap.keys()))
             dims = nodemap[keys[0]].dimensions
+            for k in keys:
+                y = nodemap[k].recurrent_weights
+                z = nodemap[k].recurrent_weights.reshape((dims))
+
+            assf = [nodemap[k].recurrent_weights.reshape((dims)) for k in keys]
+
             values = np.asarray([nodemap[k].recurrent_weights.reshape((dims)) for k in keys])
             # global_context_dim = np.tile(global_context, (values.shape[0], 1))
             out = scipy.spatial.distance.cdist(values,

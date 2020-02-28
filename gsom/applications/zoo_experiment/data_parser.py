@@ -1,5 +1,5 @@
 import pandas as pd
-import gsom.applications.zoo_experiment.gsmote.GSMOTE as GSMOTE
+import gsmote.GSMOTE as GSMOTE
 # import smote as smote
 from sklearn.model_selection import train_test_split
 
@@ -25,17 +25,17 @@ class InputParser:
     #         0: X_train_reshaped[:2000, :]
     #     }
         #GSMOTE
-        X_f,y_f = GSMOTE.OverSample()
-
-
-        X_t, X_test, y_t, y_test = train_test_split(X_f, y_f, test_size=0.2, random_state=0)
-
-
-        classes = y_t.tolist()
-        labels = y_t.tolist()
-        input_database = {
-            0: X_t
-        }
+        # X_f,y_f = GSMOTE.OverSample()
+        #
+        #
+        # X_t, X_test, y_t, y_test = train_test_split(X_f, y_f, test_size=0.2, random_state=0)
+        #
+        #
+        # classes = y_t.tolist()
+        # labels = y_t.tolist()
+        # input_database = {
+        #     0: X_t
+        # }
 
         # (X_train, y_train), (X_test, y_test) = mnist.load_data()
         #
@@ -84,13 +84,15 @@ class InputParser:
         #     }
 
 
-        # input_data = pd.read_csv(filename, header=header)
-        #
-        # classes = input_data[17].tolist()
-        # labels = input_data[0].tolist()
-        # input_database = {
-        #     0: input_data.as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
-        # }
+        input_data = pd.read_csv(filename, header=header)
+
+        classes = input_data[17].tolist()
+        labels = input_data[0].tolist()
+        input_database = {
+            0: input_data.as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+        }
 
 
-        return input_database, labels, classes,X_test,y_test
+        # return input_database, labels, classes,X_test,y_test
+        return input_database, labels, classes
+
