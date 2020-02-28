@@ -54,5 +54,7 @@ def pre_process(filename):
     df = pd.read_csv(filename)
     X = df.iloc[:, :-1].values
     y = df.iloc[:,-1].values
+    X = np.asarray(X)
+    y = np.asarray(y)
     return X,y
 

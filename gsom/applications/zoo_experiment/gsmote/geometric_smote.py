@@ -166,7 +166,7 @@ class GeometricSMOTE(BaseOverSampler):
             # selection_strategy='combined',
             k_neighbors=5,
             n_jobs=1,
-            sampling_rate=0.25,
+            sampling_rate=0.3,
     ):
         super(GeometricSMOTE, self).__init__(sampling_strategy=sampling_strategy)
         self.random_state = random_state
