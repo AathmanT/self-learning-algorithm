@@ -70,8 +70,7 @@ class Utilities:
             dims = nodemap[keys[0]].dimensions
             values = np.asarray([nodemap[k].recurrent_weights.reshape((dims)) for k in keys])
             # global_context_dim = np.tile(global_context, (values.shape[0], 1))
-            out = scipy.spatial.distance.cdist(values,
-                                               global_context[0, :].reshape(1, dims), 'euclidean')
+            out = scipy.spatial.distance.cdist(values,np.reshape(global_context[0, :],(1,dims)), 'euclidean')
 
             # distances = np.sqrt(np.sum((values - global_context_dim)**2, axis=1))
 

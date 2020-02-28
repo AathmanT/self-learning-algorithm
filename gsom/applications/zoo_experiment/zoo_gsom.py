@@ -10,7 +10,6 @@ import pandas as pd
 
 import data_parser as Parser
 from util import utilities as Utils
-from util import display as Display_Utils
 
 from params import params as Params
 from core4 import core_controller as Core
