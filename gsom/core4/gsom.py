@@ -138,7 +138,8 @@ class GSOM:
             self.previousBMU[0] = winner.recurrent_weights
 
             node_index = Utils.Utilities.generate_index(winner.x, winner.y)
-            self.gsom_nodemap[node_index].map_label(curr_count)
+            self.gsom_nodemap[node_index].map_label_indexes(curr_count)
+            self.gsom_nodemap[node_index].map_label(str(self.activity_classes[curr_count]))
             curr_count += 1
 
         # return the finalized map
@@ -173,6 +174,100 @@ class GSOM:
 
         # return the finalized map
         return gsom_nodemap
+
+
+
+    def finalize_gsom_label(self):
+
+        # all_coordinates = self.node_labels.iloc[:, 4:]
+        # all_coordinates = all_coordinates.astype(int)
+
+        neutral_indexes = []
+        removable_indexes = []
+
+        for key, value in self.gsom_nodemap.items():
+
+            key_split = key.split(':')
+            x = int(key_split[0])
+            y = int(key_split[1])
+
+            if value.get_hit_count() > 0:
+                count_0 = 0
+                count_1 = 0
+
+
+                labels = value.get_mapped_labels()
+
+                for label in labels:
+                    if label == '1':
+                        count_1 += 1
+                    if label == '0':
+                        count_0 += 1
+                if count_1 > count_0:
+                    self.gsom_nodemap[key].change_label('1')
+                    # self.node_labels.loc[index, "Name"] = '1'
+                elif count_0 > count_1:
+                    # self.node_labels.loc[index, "Name"] = '0'
+                    self.gsom_nodemap[key].change_label('0')
+
+                else:
+                    # self.node_labels.loc[index, "Name"] = 'N'
+                    self.gsom_nodemap[key].change_label('0')
+
+                    neutral_indexes.append(key)
+            else:
+                removable_indexes.append(key)
+        print(neutral_indexes)
+        for key in removable_indexes:
+            del self.gsom_nodemap[key]
+
+        print(neutral_indexes)
+        # for index in neutral_indexes:
+        #
+        #     tester = all_coordinates.loc[index].to_numpy().reshape(1, 2)
+        #     distances = scipy.spatial.distance.cdist(all_coordinates, tester, self.distance)
+        #
+        #     distance_indexes = distances.argsort(axis=0)[:6]
+        #
+        #     class_counter = Counter()
+        #     for dist_index in distance_indexes:
+        #         if (dist_index != index):
+        #             label_of_node = self.node_labels.loc[dist_index, "Name"].values[0]
+        #             class_counter[label_of_node] += 1
+        #     x = class_counter.most_common(1)[0][0]
+        #     self.node_labels.loc[index, "Name"] = x
+
+
+
+    """
+       This function to be called for a separate dataset, to evaluate the hit nodes.
+       """
+
+    def predict(self,X_test):
+
+        y_pred = []
+        param = self.parameters
+        gsom_nodemap = copy.deepcopy(self.gsom_nodemap)
+
+
+        for cur_input in X_test:
+
+            self.globalContexts_evaluation[0] = cur_input
+
+            # Update global context
+            for z in range(1, param.NUMBER_OF_TEMPORAL_CONTEXTS):
+                self.globalContexts_evaluation[z] = (param.BETA * self.previousBMU_evaluation[0, z]) + (
+                            (1 - param.BETA) * self.previousBMU_evaluation[0, z - 1])
+
+            winner = Utils.Utilities.select_winner_recurrent(gsom_nodemap, self.globalContexts_evaluation, self.alphas)
+
+
+            node_index = Utils.Utilities.generate_index(winner.x, winner.y)
+
+            y_pred.append(winner.get_mapped_labels())
+
+
+        return y_pred
 
     def _smooth_for_single_iteration_and_single_input(self, input_vector, learning_rate, neigh_radius):
 

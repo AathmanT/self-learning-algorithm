@@ -6,6 +6,7 @@ from datetime import datetime
 sys.path.append('../../')
 # import cProfile
 import numpy as np
+import pandas as pd
 
 import data_parser as Parser
 from util import utilities as Utils
@@ -16,7 +17,7 @@ from core4 import core_controller as Core
 
 
 # GSOM config
-SF = 0.50
+SF = 0.83
 # SF = 0.50
 
 forget_threshold = 80  # To include forgetting, threshold should be < learning iterations.
@@ -27,7 +28,8 @@ plot_for_itr = 4  # Unused parameter - just for visualization. Keep this as it i
 
 # File Config
 dataset = 'zoo'
-data_filename = "data/zoo.txt".replace('\\', '/')
+# data_filename = "data/creditcard-very-short.txt".replace('\\', '/')
+data_filename = "data/zoo-mini.txt".replace('\\', '/')
 experiment_id = 'Exp-new-gsom-' + datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
 output_save_location = join('output/', experiment_id)
 
@@ -59,7 +61,7 @@ if __name__ == '__main__':
         generalise_params = Params.GeneraliseParameters(gsom_params)
 
         # Process the input files
-        input_vector_database, labels, classes = Parser.InputParser.parse_input_zoo_data(data_filename, None)
+        input_vector_database, labels, classes,X_test,y_test = Parser.InputParser.parse_input_zoo_data(data_filename, None)
         output_loc, output_loc_images = generate_output_config(dataset, SF, forget_threshold)
 
         # Setup the age threshold based on the input vector length
@@ -68,18 +70,64 @@ if __name__ == '__main__':
         # Process the clustering algorithm algorithm
         controller = Core.Controller(generalise_params)
         controller_start = time.time()
-        result_dict = controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)
+        result_dict,y_pred = controller.run(input_vector_database,X_test, plot_for_itr, classes, output_loc_images)
+
+
+
+
+        from sklearn.metrics import confusion_matrix
+        import math
+
+
+        def evaluate(classifier, Y_test, y_pred):
+            tn, fp, fn, tp = confusion_matrix(Y_test.astype(int), y_pred).ravel()
+
+            precision = tp / (tp + fp)
+            recall = tp / (tp + fn)
+            f_score = 2 * precision * recall / (precision + recall)
+            interVal = (tp + fn) * (tn + fp)
+            g_mean = math.sqrt(tp * tn / interVal)
+            AUC = (tp / (tp + fn) + tn / (tn + fp)) / 2
+
+            print(classifier, " finished executing")
+            print("\nClassifier: "+ classifier)
+            print("f_score: " + str(f_score))
+            print("g_mean: " + str(g_mean))
+            print("AUC value: "+ str(AUC) +"\n")
+
+            return [classifier, f_score, g_mean, AUC]
+
+        # y_merge=np.column_stack([y_test,np.asarray(y_pred)])
+        # labels = ["Classifier", "f_score", "g_mean", "auc_value"]
+        # values = [performance1,performance2,performance3,performance4,performance5,performance6,performance7,performance8]
+        # values = [y_merge]
+        # scores = pd.DataFrame(values, columns=labels)
+        # print(scores)
+
+        evaluate("GSOM_Classifier",y_test, np.array(y_pred).astype(int))
+        # print(result_dict)
         # result_dict = cProfile.run('controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)')
         print('Algorithms completed in', round(time.time() - controller_start, 2), '(s)')
         saved_name = Utils.Utilities.save_object(result_dict, join(output_loc, 'gsom_nodemap_SF-{}'.format(SF)))
 
         gsom_nodemap = result_dict[0]['gsom']
 
+        from collections import Counter
+
+        def vote(neighbors):
+            class_counter = Counter()
+            for neighbor in neighbors:
+                class_counter[neighbor[2]] += 1
+            return class_counter.most_common(1)[0][0]
+
+
+        # for key,value in gsom_nodemap.items():
+        #     print(key," => ",[str(classes[lbl_id]) for lbl_id in value.get_mapped_labels()])
         # Display
-        display = Display_Utils.Display(result_dict[0]['gsom'], None)
-        display.setup_labels_for_gsom_nodemap(classes, 2, 'Latent Space of {} : SF={}'.format(dataset, SF),
-                                              join(output_loc, 'latent_space_' + str(SF) + '_hitvalues'))
-        display.setup_labels_for_gsom_nodemap(labels, 2, 'Latent Space of {} : SF={}'.format(dataset, SF),
-                                              join(output_loc, 'latent_space_' + str(SF) + '_labels'))
+        # display = Display_Utils.Display(result_dict[0]['gsom'], None)
+        # display.setup_labels_for_gsom_nodemap(classes, 2, 'Latent Space of {} : SF={}'.format(dataset, SF),
+        #                                       join(output_loc, 'latent_space_' + str(SF) + '_hitvalues'))
+        # display.setup_labels_for_gsom_nodemap(labels, 2, 'Latent Space of {} : SF={}'.format(dataset, SF),
+        #                                       join(output_loc, 'latent_space_' + str(SF) + '_labels'))
 
         print('Completed.')

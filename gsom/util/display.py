@@ -47,6 +47,17 @@ class Display:
         plt.axis('off')
         plt.savefig(output_filename + '.jpeg', dpi=1200)
 
+    def re_arrange_label(self, labels, label):
+        count_of_zero = 0
+        count_of_one = 0
+        for label_id in label:
+            if labels[label_id] == 1:
+                count_of_one += 1
+            if labels[label_id] == 0:
+                count_of_zero += 1
+
+        return "0(" + str(count_of_zero) + ")," + "1(" + str(count_of_one) + ")"
+
     def setup_labels_for_gsom_nodemap(self, labels, figure_id, title, output_filename):
 
         plt.figure(figure_id)
@@ -73,6 +84,7 @@ class Display:
                 plt.plot(x, y, 'o', color=listed_color_map.colors[value.get_hit_count()], markersize=2)
 
         plt.savefig(output_filename + '.png', dpi=1200)
+
 
     def setup_heatmap_for_gsom_nodemap_adl_activity(self, labels, title, output_filename):
 
