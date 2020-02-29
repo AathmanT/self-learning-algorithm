@@ -2,11 +2,15 @@ import math
 import numpy as np
 import copy
 import time
+
+import scipy
 from tqdm import tqdm
 from core4 import growth_handler as Growth_Handler
 from core4 import elements as Elements
 from util import utilities as Utils
 from util import display as Display_Utils
+from scipy import spatial
+
 # import multiprocessing as mp
 
 np.random.seed(8)
@@ -212,8 +216,25 @@ class GSOM:
 
                 else:
                     # self.node_labels.loc[index, "Name"] = 'N'
-                    self.gsom_nodemap[key].change_label('0')
 
+
+                    # cripkeu=np.empty((len(value.get_mapped_labels_indexes()),55))
+                    X_weights=[]
+                    label_indexes = value.get_mapped_labels_indexes()
+
+                    for i in label_indexes:
+                        X_weight=self.inputs[i,:]
+                        # np.append(cripkeu,sdgg,axis=0)
+                        X_weights.append(X_weight)
+                    X_weights = np.asarray(X_weights)
+                    neutral_node=value.recurrent_weights.reshape(1,value.dimensions)
+                    out = scipy.spatial.distance.cdist(X_weights,neutral_node , 'euclidean')
+
+                    nearest_index = out.argmin()
+                    nearest_neighbor_index = label_indexes[nearest_index]
+                    nearest_neighbor = self.activity_classes[nearest_neighbor_index]
+
+                    self.gsom_nodemap[key].change_label(nearest_neighbor)
                     neutral_indexes.append(key)
             else:
                 removable_indexes.append(key)
@@ -222,6 +243,8 @@ class GSOM:
             del self.gsom_nodemap[key]
 
         print(neutral_indexes)
+
+
         # for index in neutral_indexes:
         #
         #     tester = all_coordinates.loc[index].to_numpy().reshape(1, 2)

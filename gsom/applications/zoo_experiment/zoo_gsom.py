@@ -59,8 +59,8 @@ if __name__ == '__main__':
         generalise_params = Params.GeneraliseParameters(gsom_params)
 
         # Process the input files
-        # input_vector_database, labels, classes,X_test,y_test = Parser.InputParser.parse_input_zoo_data(data_filename, None)
-        input_vector_database, labels, classes = Parser.InputParser.parse_input_zoo_data(data_filename, None)
+        input_vector_database, labels, classes,X_test,y_test = Parser.InputParser.parse_input_zoo_data(data_filename, None)
+        # input_vector_database, labels, classes = Parser.InputParser.parse_input_zoo_data(data_filename, None)
 
         output_loc, output_loc_images = generate_output_config(dataset, SF, forget_threshold)
 
@@ -70,8 +70,8 @@ if __name__ == '__main__':
         # Process the clustering algorithm algorithm
         controller = Core.Controller(generalise_params)
         controller_start = time.time()
-        # result_dict,y_pred = controller.run(input_vector_database,X_test, plot_for_itr, classes, output_loc_images)
-        result_dict = controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)
+        result_dict,y_pred = controller.run(input_vector_database,X_test, plot_for_itr, classes, output_loc_images)
+        # result_dict = controller.run(input_vector_database, plot_for_itr, classes, output_loc_images)
 
 
 

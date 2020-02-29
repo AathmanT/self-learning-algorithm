@@ -1,16 +1,15 @@
 import pandas as pd
-from gsom.applications.zoo_experiment.gsmote import GeometricSMOTE
+from gsmote import GeometricSMOTE
 # import smote as smote
 from sklearn.model_selection import train_test_split
-import gsom.applications.zoo_experiment.gsmote.preprocessing as pp
+import gsmote.preprocessing as pp
 
 class InputParser:
 
     @staticmethod
     def parse_input_zoo_data(filename, header='infer'):
         gsmote = GeometricSMOTE(random_state=1)
-     @staticmethod
-     def parse_input_zoo_data(filename, header='infer'):
+
     #
     #     (X_train, y_train), (X_test, y_test) = mnist.load_data()
     #
@@ -91,15 +90,15 @@ class InputParser:
         #     }
 
 
-        input_data = pd.read_csv(filename, header=header)
+        # input_data = pd.read_csv(filename, header=header)
+        #
+        # classes = input_data[17].tolist()
+        # labels = input_data[0].tolist()
+        # input_database = {
+        #     0: input_data.as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+        # }
 
-        classes = input_data[17].tolist()
-        labels = input_data[0].tolist()
-        input_database = {
-            0: input_data.as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
-        }
 
-
-        # return input_database, labels, classes,X_test,y_test
-        return input_database, labels, classes
+        return input_database, labels, classes,X_test,y_test
+        # return input_database, labels, classes
 
